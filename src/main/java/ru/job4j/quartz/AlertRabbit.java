@@ -5,7 +5,8 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -13,40 +14,71 @@ import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
-    public static void main(String[] args) {
-        try {
+
+    public static void main(String[] args) throws Exception {
+        try (Connection connection = getConnection()) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
-            JobDetail job = newJob(Rabbit.class).build();
+            JobDataMap data = new JobDataMap();
+            data.put("connection", connection);
+            JobDetail job = newJob(Rabbit.class)
+                    .usingJobData(data)
+                    .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(loader())
+                    .withIntervalInSeconds(Integer.parseInt(loader().getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-        } catch (SchedulerException se) {
+            Thread.sleep(5000);
+            scheduler.shutdown();
+        } catch (Exception se) {
             se.printStackTrace();
         }
     }
 
-    private static int loader() {
-        int rsl = 0;
-        try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
-            Properties config = new Properties();
+    private static Connection getConnection() throws Exception {
+        Class.forName(loader().getProperty("driver-class-name"));
+        String url = loader().getProperty("url");
+        String login = loader().getProperty("username");
+        String password = loader().getProperty("password");
+        return DriverManager.getConnection(url, login, password);
+    }
+
+    private static Properties loader() {
+        Properties config = new Properties();
+        try (InputStream in = AlertRabbit
+                .class
+                .getClassLoader()
+                .getResourceAsStream("rabbit.properties")) {
             config.load(in);
-            rsl = Integer.parseInt(config.getProperty("rabbit.interval"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return rsl;
+        return config;
     }
 
     public static class Rabbit implements Job {
+
+        public Rabbit() {
+            System.out.println(hashCode());
+        }
+
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
             System.out.println("Rabbit runs here ...");
+            Connection connection = (Connection) context
+                    .getJobDetail()
+                    .getJobDataMap()
+                    .get("connection");
+            try (PreparedStatement ps = connection
+                    .prepareStatement("insert into rabbit(created_date values (?)")) {
+                ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
