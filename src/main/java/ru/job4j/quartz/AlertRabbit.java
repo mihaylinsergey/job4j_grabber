@@ -16,7 +16,8 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
 
     public static void main(String[] args) throws Exception {
-        try (Connection connection = getConnection()) {
+        Properties properties = loader();
+        try (Connection connection = getConnection(properties)) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -25,7 +26,7 @@ public class AlertRabbit {
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(Integer.parseInt(loader().getProperty("rabbit.interval")))
+                    .withIntervalInSeconds(Integer.parseInt(properties.getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -39,11 +40,11 @@ public class AlertRabbit {
         }
     }
 
-    private static Connection getConnection() throws Exception {
-        Class.forName(loader().getProperty("driver-class-name"));
-        String url = loader().getProperty("url");
-        String login = loader().getProperty("username");
-        String password = loader().getProperty("password");
+    private static Connection getConnection(Properties properties) throws Exception {
+        Class.forName(properties.getProperty("driver-class-name"));
+        String url = properties.getProperty("url");
+        String login = properties.getProperty("username");
+        String password = properties.getProperty("password");
         return DriverManager.getConnection(url, login, password);
     }
 
@@ -74,8 +75,9 @@ public class AlertRabbit {
                     .getJobDataMap()
                     .get("connection");
             try (PreparedStatement ps = connection
-                    .prepareStatement("insert into rabbit(created_date values (?)")) {
+                    .prepareStatement("insert into rabbit(created_date) values (?)")) {
                 ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                ps.execute();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
