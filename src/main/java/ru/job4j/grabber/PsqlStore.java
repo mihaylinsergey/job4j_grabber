@@ -52,13 +52,7 @@ public class PsqlStore implements Store, AutoCloseable {
         try (PreparedStatement ps = cnn.prepareStatement("Select *from post")) {
             try (ResultSet resultSet = ps.executeQuery()) {
                 while (resultSet.next()) {
-                    rsl.add(new Post(
-                            resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),
-                            resultSet.getString(4),
-                            resultSet.getTimestamp(5).toLocalDateTime()
-                    ));
+                    rsl.add(createPost(resultSet));
                 }
             }
         } catch (Exception e) {
@@ -74,13 +68,7 @@ public class PsqlStore implements Store, AutoCloseable {
             ps.setInt(1, id);
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
-                    rsl = new Post(
-                            resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),
-                            resultSet.getString(4),
-                            resultSet.getTimestamp(5).toLocalDateTime()
-                    );
+                    rsl = createPost(resultSet);
                 }
             }
         } catch (Exception e) {
@@ -96,21 +84,34 @@ public class PsqlStore implements Store, AutoCloseable {
         }
     }
 
+    private Post createPost(ResultSet resultSet) throws SQLException {
+        return new Post(
+                resultSet.getInt(1),
+                resultSet.getString(2),
+                resultSet.getString(3),
+                resultSet.getString(4),
+                resultSet.getTimestamp(5).toLocalDateTime()
+        );
+    }
+
     public static void main(String[] args) {
         try (InputStream in = PsqlStore.class.getClassLoader()
                 .getResourceAsStream("app.properties")) {
             Properties config = new Properties();
             config.load(in);
-            PsqlStore example = new PsqlStore(config);
-            Post post = new Post(
-                    "Вакансия JAVA",
-                    "https://www.sql.ru/forum/1342124/v-poiskah-java-developer",
-                    "Требуется программист",
-                    LocalDateTime.now()
-            );
-            example.save(post);
-            System.out.println(example.getAll());
-            System.out.println(example.findById(1));
+            try (PsqlStore example = new PsqlStore(config)) {
+                Post post = new Post(
+                        "Вакансия JAVA",
+                        "https://www.sql.ru/forum/1342124/v-poiskah-java-developer",
+                        "Требуется программист",
+                        LocalDateTime.now()
+                );
+                example.save(post);
+                System.out.println(example.getAll());
+                System.out.println(example.findById(1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
