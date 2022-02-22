@@ -7,7 +7,10 @@ import org.jsoup.select.Elements;
 import ru.job4j.grabber.Parse;
 import ru.job4j.grabber.utils.DateTimeParser;
 import ru.job4j.grabber.utils.Post;
+import ru.job4j.grabber.utils.SqlRuDateTimeParser;
+
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -15,7 +18,10 @@ import java.util.regex.Pattern;
 public class SqlRuParse implements Parse {
 
     private static final Pattern PATTERN = Pattern.compile("(java)[^script]", Pattern.CASE_INSENSITIVE);
-    private final DateTimeParser dateTimeParser;
+    private DateTimeParser dateTimeParser = new SqlRuDateTimeParser();
+
+    public SqlRuParse() {
+    }
 
     public SqlRuParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
