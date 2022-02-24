@@ -2,7 +2,7 @@ CREATE TABLE company(
     id integer NOT NULL,
     name character varying,
     CONSTRAINT company_pkey PRIMARY KEY (id)
-);\
+);
 
 CREATE TABLE person
 (
@@ -28,6 +28,7 @@ insert into person(id, name, company_id) values (8, 'Levin', 3);
 insert into person(id, name, company_id) values (9, 'Pashin', 3);
 insert into person(id, name, company_id) values (10, 'Kashin', 4);
 insert into person(id, name, company_id) values (11, 'Kalinin', 5);
+insert into person(id, name, company_id) values (12, 'Rogov', 2);
 
 select p.name, c.name 
 from person p
@@ -40,11 +41,14 @@ from company c
 left join person p
 on c.id=p.company_id
 group by c.name
-order by count(p.name)
-DESC limit 1;
-
-
-
+having count(p.name) >=
+(select max(total)
+from 
+(select c.name as comp_name, count(p.name) as total
+from company c
+left join person p
+on c.id=p.company_id
+group by c.name) result);
 
 
 
