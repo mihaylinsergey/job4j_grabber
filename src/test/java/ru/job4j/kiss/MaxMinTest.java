@@ -18,7 +18,7 @@ public class MaxMinTest {
         Integer rsl = example.max(value, new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
-                return o2.compareTo(o1);
+                return Integer.compare(o2, o1);
             }
         });
         Integer exp = 123;
@@ -32,7 +32,7 @@ public class MaxMinTest {
         Integer rsl = example.min(value, new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
-                return o2.compareTo(o1);
+                return Integer.compare(o2, o1);
             }
         });
         Integer exp = 0;
