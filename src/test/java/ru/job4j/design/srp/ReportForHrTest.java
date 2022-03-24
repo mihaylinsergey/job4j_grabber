@@ -3,7 +3,6 @@ package ru.job4j.design.srp;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.Is.is;
 import org.junit.Test;
-import org.w3c.dom.ls.LSOutput;
 
 import java.util.Calendar;
 
