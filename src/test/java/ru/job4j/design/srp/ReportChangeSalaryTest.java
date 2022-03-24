@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.Calendar;
 
 public class ReportChangeSalaryTest {
-    public static final double RATIO = 1000;
 
     @Test
     public void whenChangeSalaryGenerated() {
@@ -21,7 +20,7 @@ public class ReportChangeSalaryTest {
                 .append(worker.getName()).append(";")
                 .append(worker.getHired()).append(";")
                 .append(worker.getFired()).append(";")
-                .append(worker.getSalary() * RATIO).append(";")
+                .append(worker.getSalary() * ReportChangeSalary.RATIO).append(";")
                 .append(System.lineSeparator());
         assertThat(engine.generate(em -> true), is(expect.toString()));
     }
