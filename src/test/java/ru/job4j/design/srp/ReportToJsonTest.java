@@ -16,11 +16,17 @@ public class ReportToJsonTest {
     public void whenReportToJson() {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
+        String gsonDate = new GsonBuilder().create().toJson(now);
         Employee worker = new Employee("Ivan", now, now, 100);
         store.add(worker);
         Report engine = new ReportToJson(store);
-        String expect = new GsonBuilder().create().toJson(List.of(worker));
-        assertThat(engine.generate(em -> true), is(expect));
+        StringBuilder expect = new StringBuilder()
+                .append("[{\"name\":\"Ivan\",\"hired\":")
+                .append(gsonDate)
+                .append(",\"fired\":")
+                .append(gsonDate)
+                .append(",\"salary\":100.0}]");
+        assertThat(engine.generate(em -> true), is(expect.toString()));
     }
 
 }
