@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import java.time.ZoneOffset;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import static org.hamcrest.core.Is.is;
@@ -15,9 +16,9 @@ public class ReportToXmlTest {
     @Test
     public void whenReportToXml() {
         MemStore store = new MemStore();
-        Calendar date = Calendar.getInstance();
-        date.setTimeZone(TimeZone.getTimeZone(ZoneOffset.of("+3")));
-        Employee worker = new Employee("Ivan", date, date, 100);
+        Calendar now = new GregorianCalendar(2022, Calendar.MARCH, 30);
+        now.setTimeZone(TimeZone.getTimeZone(ZoneOffset.of("+3")));
+        Employee worker = new Employee("Ivan", now, now, 100);
         store.add(worker);
         Report engine = new ReportToXml(store);
         StringBuilder expect = new StringBuilder()
@@ -27,9 +28,9 @@ public class ReportToXmlTest {
                 .append(System.lineSeparator())
                 .append("    <employees>")
                 .append(System.lineSeparator())
-                .append("        <fired>" + date + "</fired>")
+                .append("        <fired>2022-03-30T00:00:00+03:00</fired>")
                 .append(System.lineSeparator())
-                .append("        <hired>" + date + "</hired>")
+                .append("        <hired>2022-03-30T00:00:00+03:00</hired>")
                 .append(System.lineSeparator())
                 .append("        <name>Ivan</name>")
                 .append(System.lineSeparator())
