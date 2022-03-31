@@ -40,6 +40,7 @@ public class ReportToXmlTest {
                 .append(System.lineSeparator())
                 .append("</Employee>")
                 .append(System.lineSeparator());
-         assertThat(engine.generate(em -> true), is(expect.toString()));
+         String result = expect.toString().replaceAll("\r*", "");
+         assertThat(engine.generate(em -> true), is(result));
         }
     }
