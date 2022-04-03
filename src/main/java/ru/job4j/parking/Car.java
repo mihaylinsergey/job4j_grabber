@@ -2,9 +2,9 @@ package ru.job4j.parking;
 
 public class Car extends Vehicle {
 
-    private final int size = 1;
+    public static final int SIZE = 1;
 
     public Car() {
-        super.setSize(size);
+        super.setSize(SIZE);
     }
 }

@@ -6,9 +6,13 @@ public interface Parking {
 
     void leave(Vehicle vehicle);
 
-    int getSize();
+    int parkingCarsSize();
 
-    int getParkingSize();
+    int parkingTracksSize();
+
+    int getParkingCarsSize();
+
+    int getParkingTracksSize();
 
     int checkSize();
     }
