@@ -13,25 +13,36 @@ public class ControllQualityTest {
     public void sort() {
         ControllQuality controllQuality = new ControllQuality();
         Food sausage = new Meet("Sausage",
-                LocalDate.of(2023, 12, 1),
-                LocalDate.of(2022, 1, 1),
+                LocalDate.now().plusDays(100),
+                LocalDate.now().minusDays(20),
                 1000, 0);
         Food bread = new Bread("Bread",
-                LocalDate.of(2022, 2, 15),
-                LocalDate.of(2022, 2, 1),
+                LocalDate.now().plusDays(9),
+                LocalDate.now().minusDays(4),
                 40, 0);
         Food milk = new Milk("Milk",
-                LocalDate.of(2022, 4, 01),
-                LocalDate.of(2022, 3, 31),
+                LocalDate.now().minusDays(1),
+                LocalDate.now().minusDays(4),
                 60, 0);
-        Food meet = new Meet("Meet",
-                LocalDate.of(2022, 4, 4),
-                LocalDate.of(2022, 3, 25),
-                600, 0);
-        List<Food> products = new ArrayList(List.of(sausage, bread, milk, meet));
+        List<Food> products = new ArrayList(List.of(sausage, bread, milk));
         controllQuality.sort(products);
         assertThat(controllQuality.getWarehouse().getList(), is(List.of(sausage)));
-        assertThat(controllQuality.getShop().getList(), is(List.of(meet)));
-        assertThat(controllQuality.getTrash().getList(), is(List.of(bread, milk)));
+        assertThat(controllQuality.getShop().getList(), is(List.of(bread)));
+        assertThat(controllQuality.getTrash().getList(), is(List.of(milk)));
+    }
+
+    @Test
+    public void checkDiscount() {
+        ControllQuality controllQuality = new ControllQuality();
+        Food milk = new Milk("Milk",
+                LocalDate.now().plusDays(1),
+                LocalDate.now().minusDays(4),
+                120, 0);
+        List<Food> products = new ArrayList(List.of(milk));
+        controllQuality.sort(products);
+        assertThat(controllQuality.getShop().getList(), is(List.of(new Milk("Milk",
+                LocalDate.now().plusDays(1),
+                LocalDate.now().minusDays(4),
+                84, 30))));
     }
 }
