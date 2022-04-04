@@ -37,22 +37,22 @@ public class ParkingPlaceTest {
     }
 
     @Ignore
-    @Test(expected = Exception.class)
+    @Test
     public void whenNoPlaceForCars() {
         Parking parking = new ParkingPlace(1, 1);
         Car red = new Car();
         Car blue = new Car();
-        parking.park(red);
-        parking.park(blue);
+        assertTrue(parking.park(red));
+        assertFalse(parking.park(blue));
     }
 
     @Ignore
-    @Test(expected = Exception.class)
+    @Test
     public void whenNoPlaceForTracks() {
         Parking parking = new ParkingPlace(0, 1);
         Track small = new Track(2);
         Track big = new Track(4);
-        parking.park(small);
-        parking.park(big);
+        assertTrue(parking.park(small));
+        assertFalse(parking.park(big));
     }
 }

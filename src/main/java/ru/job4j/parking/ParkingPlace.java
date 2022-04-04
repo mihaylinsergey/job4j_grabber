@@ -18,8 +18,8 @@ public class ParkingPlace implements Parking {
     }
 
     @Override
-    public void park(Vehicle vehicle) {
-
+    public boolean park(Vehicle vehicle) {
+        return false;
     }
 
     @Override

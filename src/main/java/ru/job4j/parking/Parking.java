@@ -2,7 +2,7 @@ package ru.job4j.parking;
 
 public interface Parking {
 
-    void park(Vehicle vehicle);
+    boolean park(Vehicle vehicle);
 
     void leave(Vehicle vehicle);
 
