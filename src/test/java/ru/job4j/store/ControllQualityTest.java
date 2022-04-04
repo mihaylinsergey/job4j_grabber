@@ -25,25 +25,26 @@ public class ControllQualityTest {
                 LocalDate.now().minusDays(4),
                 60, 0);
         List<Food> products = new ArrayList(List.of(sausage, bread, milk));
-        controllQuality.sort(products);
-        System.out.println(controllQuality.getWarehouseList());
-     /*   assertThat(controllQuality.getWarehouse().getList(), is(List.of(sausage)));
-        assertThat(controllQuality.getShop().getList(), is(List.of(bread)));
-        assertThat(controllQuality.getTrash().getList(), is(List.of(milk)));*/
+        List<Store> stores = new ArrayList<>(List.of(new Warehouse(), new Shop(), new Trash()));
+        controllQuality.sort(stores, products);
+        assertThat(controllQuality.getStoreList().get(0).getList(), is(List.of(sausage)));
+        assertThat(controllQuality.getStoreList().get(1).getList(), is(List.of(bread)));
+        assertThat(controllQuality.getStoreList().get(2).getList(), is(List.of(milk)));
     }
-/*
+
     @Test
     public void checkDiscount() {
         ControllQuality controllQuality = new ControllQuality();
         Food milk = new Milk("Milk",
                 LocalDate.now().plusDays(1),
                 LocalDate.now().minusDays(4),
-                120, 0);
+                120, 30);
         List<Food> products = new ArrayList(List.of(milk));
-        controllQuality.sort(products);
-        assertThat(controllQuality.getShop().getList(), is(List.of(new Milk("Milk",
+        List<Store> stores = new ArrayList<>(List.of(new Shop()));
+        controllQuality.sort(stores, products);
+        assertThat(controllQuality.getStoreList().get(0).getList(), is(List.of(new Milk("Milk",
                 LocalDate.now().plusDays(1),
                 LocalDate.now().minusDays(4),
                 84, 30))));
-    }*/
+    }
 }

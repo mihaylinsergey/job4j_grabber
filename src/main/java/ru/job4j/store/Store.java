@@ -6,13 +6,14 @@ import java.util.List;
 
 public interface Store {
 
-    void add(Food product);
+    boolean add(Food product);
 
     List<Food> getList();
 
     boolean accept(Food food);
 
-    default double checkDate(Food product, LocalDate localDate) {
+    default double checkDate(Food product) {
+        LocalDate localDate = LocalDate.now();
         double data1 = Duration.between(product.getCreateDate().atStartOfDay(), localDate.atStartOfDay()).toDays();
         double data2 = Duration.between(product.getCreateDate().atStartOfDay(), product.getExpiryDate().atStartOfDay()).toDays();
         return (data1 / data2) * 100;

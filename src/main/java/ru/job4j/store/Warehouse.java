@@ -10,10 +10,13 @@ public class Warehouse implements Store {
     private LocalDate localDate = LocalDate.now();
 
     @Override
-    public void add(Food food) {
+    public boolean add(Food food) {
+        boolean rsl = false;
         if (accept(food)) {
             list.add(food);
+            rsl = true;
         }
+        return rsl;
     }
 
     @Override
@@ -23,9 +26,6 @@ public class Warehouse implements Store {
 
     @Override
     public boolean accept(Food food) {
-        if (checkDate(food, localDate) < 25) {
-            return true;
-        }
-        return false;
+        return checkDate(food) < 25;
     }
 }

@@ -10,14 +10,16 @@ public class Shop implements Store {
     private LocalDate localDate = LocalDate.now();
 
     @Override
-    public void add(Food food) {
+    public boolean add(Food food) {
+        boolean rsl = false;
         if (accept(food)) {
-            if (checkDate(food, localDate) >= 75) {
-                food.setDiscount(30);
-                food.setPrice(food.getPrice() * 0.7);
+            if (checkDate(food) >= 75) {
+                food.setPrice(food.getPrice() * (1 - food.getDiscount() / 100));
             }
             list.add(food);
+            rsl = true;
         }
+        return rsl;
     }
 
     @Override
@@ -27,9 +29,6 @@ public class Shop implements Store {
 
     @Override
     public boolean accept(Food food) {
-        if (checkDate(food, localDate) > 25 && checkDate(food, localDate) < 100) {
-            return true;
-        }
-        return false;
+        return  checkDate(food) > 25 && checkDate(food) < 100;
     }
 }
