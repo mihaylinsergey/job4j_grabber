@@ -1,13 +1,11 @@
 package ru.job4j.store;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Trash implements Store {
 
     private List<Food> list = new ArrayList<>();
-    private LocalDate localDate = LocalDate.now();
 
     @Override
     public boolean add(Food food) {
