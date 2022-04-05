@@ -7,4 +7,9 @@ public class Car extends Vehicle {
     public Car() {
         super.setSize(SIZE);
     }
+
+    @Override
+    public String toString() {
+        return "Car{}";
+    }
 }

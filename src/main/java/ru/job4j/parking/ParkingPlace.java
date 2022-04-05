@@ -9,6 +9,8 @@ public class ParkingPlace implements Parking {
     private List<Vehicle> parkingTracks;
     private int parkingCarsSize = 0;
     private int parkingTracksSize = 0;
+    private int carsCounter = 0;
+    private int tracksCounter = 0;
 
     public ParkingPlace(int cars, int tracks) {
         parkingCars = new ArrayList<>(cars);
@@ -19,36 +21,39 @@ public class ParkingPlace implements Parking {
 
     @Override
     public boolean park(Vehicle vehicle) {
-        return false;
-    }
-
-    @Override
-    public void leave(Vehicle vehicle) {
-
-    }
-
-    @Override
-    public int parkingCarsSize() {
-        return 0;
-    }
-
-    @Override
-    public int parkingTracksSize() {
-        return 0;
+        boolean rsl = false;
+        int size = vehicle.getSize();
+        if (vehicle.getSize() == 1) {
+            if (parkingCarsSize > 0) {
+                parkingCars.add(vehicle);
+                parkingCarsSize--;
+                carsCounter++;
+                rsl = true;
+            }
+        }
+        if (vehicle.getSize() >= 2) {
+            if (parkingTracksSize  > 0) {
+                parkingTracks.add(vehicle);
+                parkingTracksSize--;
+                tracksCounter++;
+                rsl = true;
+            } else if (parkingCarsSize >= size) {
+                parkingCars.add(vehicle);
+                parkingCarsSize = parkingCarsSize - size;
+                carsCounter = carsCounter + size;
+                rsl = true;
+            }
+        }
+        return rsl;
     }
 
     @Override
     public int getParkingCarsSize() {
-        return 0;
+        return carsCounter;
     }
 
     @Override
     public int getParkingTracksSize() {
-        return 0;
-    }
-
-    @Override
-    public int checkSize() {
-        return 0;
+        return tracksCounter;
     }
 }

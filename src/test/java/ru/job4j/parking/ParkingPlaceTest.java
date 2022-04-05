@@ -1,13 +1,11 @@
 package ru.job4j.parking;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class ParkingPlaceTest {
 
-    @Ignore
     @Test
     public void when2CarsAnd1Track() {
         Parking parking = new ParkingPlace(2, 1);
@@ -21,7 +19,6 @@ public class ParkingPlaceTest {
         assertThat(parking.getParkingTracksSize(), is(1));
     }
 
-    @Ignore
     @Test
     public void when2Tracks() {
         Parking parking = new ParkingPlace(2, 1);
@@ -33,7 +30,6 @@ public class ParkingPlaceTest {
         assertThat(parking.getParkingTracksSize(), is(1));
     }
 
-    @Ignore
     @Test
     public void whenNoPlaceForCars() {
         Parking parking = new ParkingPlace(1, 1);
@@ -43,7 +39,6 @@ public class ParkingPlaceTest {
         assertFalse(parking.park(blue));
     }
 
-    @Ignore
     @Test
     public void whenNoPlaceForTracks() {
         Parking parking = new ParkingPlace(0, 1);
