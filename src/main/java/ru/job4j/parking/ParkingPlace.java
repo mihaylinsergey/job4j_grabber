@@ -23,26 +23,21 @@ public class ParkingPlace implements Parking {
     public boolean park(Vehicle vehicle) {
         boolean rsl = false;
         int size = vehicle.getSize();
-        if (vehicle.getSize() == 1) {
-            if (parkingCarsSize > 0) {
-                parkingCars.add(vehicle);
-                parkingCarsSize--;
-                carsCounter++;
-                rsl = true;
-            }
-        }
-        if (vehicle.getSize() >= 2) {
-            if (parkingTracksSize  > 0) {
-                parkingTracks.add(vehicle);
-                parkingTracksSize--;
-                tracksCounter++;
-                rsl = true;
-            } else if (parkingCarsSize >= size) {
-                parkingCars.add(vehicle);
-                parkingCarsSize = parkingCarsSize - size;
-                carsCounter = carsCounter + size;
-                rsl = true;
-            }
+        if (size == Car.SIZE && parkingCarsSize > 0) {
+            parkingCars.add(vehicle);
+            parkingCarsSize--;
+            carsCounter++;
+            rsl = true;
+        } else if (size > Car.SIZE && parkingTracksSize  > 0) {
+            parkingTracks.add(vehicle);
+            parkingTracksSize--;
+            tracksCounter++;
+            rsl = true;
+        } else if (size > Car.SIZE && parkingCarsSize >= size) {
+            parkingCars.add(vehicle);
+            parkingCarsSize = parkingCarsSize - size;
+            carsCounter = carsCounter + size;
+            rsl = true;
         }
         return rsl;
     }
